@@ -2,52 +2,66 @@
 #include <stdlib.h>
 #include <time.h>
 
-// Function to generate a random number
-int generate_random_number(int max) {
-  srand(time(NULL)); // Seed the random number generator
-  return rand() % max + 1; // Random number between 1 and max
-  
-}
 
 // Function to play the guessing game
-void play_game(int max_attempts, int max_number) {
+void playGame() {
+  int randomNumber, guess, attempts = 0;
+  const int maxAttempts = 5;
+
   // Generate random number
-  int secret_number = generate_random_number(max_number);
-  // Set initial guesses to 0
-  int guess, attempts = 0;
+  srand(time(0)); // Seed for random number
+  randomNumber = rand() % 10 + 1;
 
   // Game prompt
   printf("Welcome to the Number Guessing Game!\n");
-  printf("I'm thinking of a number between 1 and %d.\n", max_number);
+  printf("I'm thinking of a number between 1 and 10.\n");
 
   // While attempts is less than 5 you can enter a guess and play
-  while (attempts < max_attempts) {
+  while (attempts <= maxAttempts) {
     printf("Enter your guess: ");
     scanf("%d", &guess);
+
     attempts++;
 
     // Input logic, tells user if guess is too low, high or correct
-    if (guess < secret_number) {
+    if (guess == randomNumber) {
+      printf("Congrats! You have gussed the magic number in %d attempts.\n", attempts);
+      break;
+    } else if (guess < randomNumber) {
       printf("Too low! Try again.\n");
-    } else if (guess > secret_number) {
-      printf("Too high! Try again.\n");
     } else {
-      printf("Congratulations! You guessed the number in %d attempts.\n", attempts);
-      return;
+      printf("Too high! Try again.\n");
     }
   }
+	
+  if (attempts > maxAttempts) { // Game over output
+ 	 printf("Sorry, you've used all %d attempts. The number was %d.\n", maxAttempts, randomNumber);
+	}
+}
 
-  // Game over output
-  printf("Sorry, you've used all your attempts. The number was %d.\n", secret_number);
+// Function to prompt the user if they want to play again
+void newGame() {
+	char choice;
+
+	while (1) {  // Loop to keep playing
+		playGame(); // Start game
+
+		printf("Would you like to play again? (Y/n): ");
+		scanf(" %c", &choice);
+		
+		if (choice == 'n' || choice == 'N') {
+			printf("Thanks for playing!\n");
+			break; // exit loop and program
+		} else if (choice != 'y' && choice != 'Y') {
+			printf("Invalid input.\n");
+		}
+
+	} 
 }
 
 // Main
 int main() {
-  int max_attempts = 5; // Attempts for user
-  int max_number = 50; // Set guess range
-
-  play_game(max_attempts, max_number); // Pass variables into play_game function
-
+  newGame(); // Start game loop
   return 0;
   
 }
